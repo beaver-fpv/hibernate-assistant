@@ -1,0 +1,70 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="休眠助手" Width="580" Height="700" MinWidth="490" MinHeight="560" WindowStartupLocation="CenterScreen" Background="Transparent" FontFamily="Microsoft YaHei UI, Segoe UI" FontSize="14" Foreground="{DynamicResource TextPrimary}">
+  <Window.Resources>
+    <Style TargetType="Button">
+      <Setter Property="MinHeight" Value="40"/><Setter Property="Padding" Value="16,9"/><Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="Background" Value="{DynamicResource ButtonBackground}"/><Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/><Setter Property="BorderBrush" Value="{DynamicResource Border}"/>
+      <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
+        <Border x:Name="Surface" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="10" Padding="{TemplateBinding Padding}"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
+        <ControlTemplate.Triggers>
+          <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Surface" Property="BorderBrush" Value="{DynamicResource Focus}"/></Trigger>
+          <Trigger Property="IsPressed" Value="True"><Setter TargetName="Surface" Property="Opacity" Value="0.75"/></Trigger>
+          <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Surface" Property="BorderBrush" Value="{DynamicResource Focus}"/></Trigger>
+          <Trigger Property="IsEnabled" Value="False"><Setter TargetName="Surface" Property="Opacity" Value="0.45"/></Trigger>
+        </ControlTemplate.Triggers>
+      </ControlTemplate></Setter.Value></Setter>
+    </Style>
+    <Style TargetType="TextBlock"><Setter Property="TextWrapping" Value="Wrap"/></Style>
+    <Style TargetType="ToolTip">
+      <Setter Property="Background" Value="{DynamicResource SolidSurface}"/>
+      <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource Border}"/>
+    </Style>
+  </Window.Resources>
+  <ScrollViewer x:Name="MainSurface" Background="{DynamicResource WindowBackground}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+    <StackPanel Margin="32,28,32,24">
+      <Grid Margin="0,0,0,22">
+        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
+        <StackPanel>
+          <TextBlock Text="休眠助手" FontSize="29" FontWeight="SemiBold"/>
+          <TextBlock Text="保存此刻，下次开机接着用。" Margin="0,8,0,0" Foreground="{DynamicResource TextSecondary}"/>
+        </StackPanel>
+        <Viewbox Grid.Column="1" Width="44" Height="44" VerticalAlignment="Top" Margin="8,4,0,0"><Canvas Width="48" Height="48"><Path Data="M 31,5 A 20,20 0 1 0 43,32 A 18,18 0 0 1 31,5 Z" Fill="{DynamicResource IconFill}" Stroke="{DynamicResource AccentText}" StrokeThickness="1.8"/></Canvas></Viewbox>
+      </Grid>
+      <Border Background="{DynamicResource Surface}" BorderBrush="{DynamicResource Border}" BorderThickness="1" CornerRadius="12" Padding="22,20">
+        <StackPanel>
+          <DockPanel LastChildFill="True">
+            <Ellipse x:Name="StatusDot" Width="9" Height="9" Fill="{DynamicResource StatusNeutral}" Margin="0,0,9,0" VerticalAlignment="Center"/>
+            <TextBlock x:Name="StatusTitle" Text="正在检查休眠状态…" FontSize="18" FontWeight="SemiBold"/>
+          </DockPanel>
+          <TextBlock x:Name="StatusDescription" Text="读取电脑的电源状态与磁盘空间。" Foreground="{DynamicResource TextSecondary}" Margin="0,8,0,17"/>
+          <Border BorderBrush="{DynamicResource Divider}" BorderThickness="0,1,0,0" Margin="0,0,0,16"/>
+          <Grid>
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="12"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+            <TextBlock Text="休眠文件占用" Foreground="{DynamicResource TextSecondary}"/><TextBlock x:Name="HiberSize" Grid.Column="1" Text="读取中" FontWeight="SemiBold"/>
+            <TextBlock Grid.Row="2" Text="系统盘剩余空间" Foreground="{DynamicResource TextSecondary}"/><TextBlock x:Name="FreeSize" Grid.Row="2" Grid.Column="1" Text="读取中" FontWeight="SemiBold"/>
+          </Grid>
+        </StackPanel>
+      </Border>
+      <TextBlock Text="休眠会发生什么" FontWeight="SemiBold" Margin="0,24,0,10"/>
+      <TextBlock Text="保存工作状态  →  进入休眠  →  开机恢复" Foreground="{DynamicResource AccentText}" FontSize="14"/>
+      <TextBlock Text="休眠期间程序暂停。等电脑完全进入休眠、停止运行后，再断开电源。" Foreground="{DynamicResource TextSecondary}" Margin="0,9,0,20" LineHeight="22"/>
+      <Border x:Name="ActionNotice" Background="{DynamicResource NoticeBackground}" BorderBrush="{DynamicResource Border}" BorderThickness="1" CornerRadius="10" Padding="14,11" Margin="0,0,0,14">
+        <TextBlock x:Name="ActionMessage" Text="点击后显示全屏倒计时，5 秒内可取消。" Foreground="{DynamicResource AccentText}" LineHeight="21"/>
+      </Border>
+      <Grid>
+        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+        <Button x:Name="HibernateButton" Content="开始休眠" FontSize="17" FontWeight="SemiBold" Background="{DynamicResource PrimaryBackground}" Foreground="{DynamicResource PrimaryForeground}" MinHeight="52" IsEnabled="False" AutomationProperties.Name="开始休眠，五秒内可取消"/>
+        <Button x:Name="CancelButton" Grid.Column="1" Content="取消" Margin="10,0,0,0" MinWidth="86" Visibility="Collapsed"/>
+      </Grid>
+      <Grid Margin="0,12,0,0">
+        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+        <Button x:Name="EnableButton" Content="开启休眠功能" HorizontalAlignment="Left" ToolTip="需要 Windows 管理员授权"/>
+        <Button x:Name="RefreshButton" Grid.Column="1" Content="刷新状态" Background="Transparent"/>
+      </Grid>
+      <Expander Header="查看系统说明" Margin="0,20,0,0" Foreground="{DynamicResource TextSecondary}">
+        <TextBox x:Name="SystemDetail" Margin="0,12,0,0" Padding="10" IsReadOnly="True" TextWrapping="Wrap" BorderBrush="{DynamicResource Border}" Background="{DynamicResource Surface}" Foreground="{DynamicResource TextSecondary}" MaxHeight="160" VerticalScrollBarVisibility="Auto" FontSize="12"/>
+      </Expander>
+    </StackPanel>
+  </ScrollViewer>
+</Window>
